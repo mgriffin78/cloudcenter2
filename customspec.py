@@ -22,12 +22,12 @@ custSpec = pg + "Template"
 z = network.split('-')
 envname = z[0]
 
-iba_api = infoblox.Infoblox('10.16.128.160', 'UCSD-Infoblox-Admin', 'OZGANhja<coLl6h+5JGx', '1.6', iba_dns_view='default', iba_network_view='default', iba_verify_ssl=False)
+iba_api = infoblox.Infoblox('<infoblox-IPAddress', '<infoblox-username', '<password>', '1.6', iba_dns_view='default', iba_network_view='default', iba_verify_ssl=False)
 
 #first find the subnet based on VLAN extended attribute
 unet = iba_api.get_network_by_extattrs("VLAN="+vlan)
 hostname = os.environ['vmName']  # The VM name should come from CloudCenter. Use the name of the VM as the OS hostname
-domain = "corp.irvineco.com"
+domain = "<domain name here>"
 fqdn = "{}.{}".format(hostname, domain)
 network = unet[0]
 mask = ipaddr.IPv4Network(network)
