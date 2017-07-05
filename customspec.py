@@ -58,6 +58,10 @@ try:
     print "hwClockUTC=true"
     print "timeZone=US/Pacific"
     print "osHostname="+hostname
-    print "custSpec=" + custSpec
 except Exception as e:
     print e
+if osName='Windows':
+	print "custSpec=" + custSpec
+else:
+    break
+	
