@@ -15,7 +15,7 @@ osType = os.environ['eNV_osName']
 cloud = os.environ['cloud']
 dmz= os.environ['eNV_dmz']
 func = os.environ['eNV_func']
-fqdn = '.corp.irvineco.com'
+fqdn = '.<customer domain>'
 ## split deployment environment and change to lower case.
 env = depEnv.split("-")
 env2 = env[1].lower()
