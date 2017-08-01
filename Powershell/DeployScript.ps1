@@ -2,7 +2,7 @@
 $domain =$args[0]
 $password=$args[1] | ConvertTo-SecureString -asPlainText -Force
 
-$username = "$domain\UCSD-UCS-Admin"
+$username = "$domain\admin"
 $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 if ($env:Cloud_Setting_cloud -Match "CLOUD_CLUS-IRVINE") {
 echo "nothing to do, the sysprep will take care of this for us"
