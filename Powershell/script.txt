@@ -1,0 +1,21 @@
+##disable adapter settings
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_rspndr
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_lltdio
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_pacer
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+
+##Disable Windows FW
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+$key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced'
+Set-ItemProperty $key Hidden 1
+Set-ItemProperty $key HideFileExt 0
+Set-ItemProperty $key ShowSuperHidden 1
+Stop-Process -processname explorer
+
+
+
+
+get-wmiobject win32_networkadapter -filter "netconnectionstatus = 2" | select netconnectionid, name, InterfaceIndex, netconnectionstatus
+
+
