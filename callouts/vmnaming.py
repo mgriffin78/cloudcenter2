@@ -26,7 +26,7 @@ env2 = env[1].lower()
 loc = {
     "GCP": "1",
     "AWS": "2",
-    "CLOUD_CLUS-IRVINE": "0"
+    "CLOUD_CLUS": "0"
 }
 
 platform = {

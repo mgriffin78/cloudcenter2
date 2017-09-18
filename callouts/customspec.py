@@ -39,9 +39,9 @@ gateway = y[0]+"."+y[1]+"."+y[2]+".1"
 
 ##define DNS Servers
 if envname == 'PROD':
-    dns_server = "10.16.128.128,10.16.128.130,10.16.140.128"
+    dns_server = "<DNSIP1>,<DNSIP2>"
 else:
-    dns_server = "10.16.171.129,10.16.170.24"
+    dns_server = "<DNSIP1>,<DNSIP2>"
 
 
 

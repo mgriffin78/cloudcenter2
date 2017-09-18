@@ -1,17 +1,17 @@
-. "c:\temp\userenv.ps1"
+﻿. "c:\temp\userenv.ps1"
 $domain =$args[0]
 $password=$args[1] | ConvertTo-SecureString -asPlainText -Force
 
-$username = "$domain\UCSD-UCS-Admin"
+$username = "$domain\admin"
 $credential = New-Object System.Management.Automation.PSCredential($username,$password)
 
 #install cylance and splunk
-wget "http://10.16.128.104/apps/Cylance/InstallCylancePROTECT.bat" -outfile "InstallCylancePROTECT.bat"
-wget "http://10.16.128.104/apps/Cylance/CylanceProtect_x64.msi" -outfile "CylanceProtect_x64.msi"
+wget "http://<REPO IP>/apps/Cylance/InstallCylancePROTECT.bat" -outfile "InstallCylancePROTECT.bat"
+wget "http://<REPO IP>/apps/Cylance/CylanceProtect_x64.msi" -outfile "CylanceProtect_x64.msi"
 
 & .\InstallCylancePROTECT.bat
 
-wget "http://10.16.128.104/apps/Splunk/splunkforwarder.msi" -outfile "splunkforwarder.msi"
+wget "http://<REPO IP>/apps/Splunk/splunkforwarder.msi" -outfile "splunkforwarder.msi"
 
 msiexec.exe /i "splunkforwarder.msi" DEPLOYMENT_SERVER="10.16.187.91:8089" SERVICESTARTTYPE=auto AGREETOLICENSE=yes LAUNCHSPLUNK=1 /quiet
 
@@ -108,40 +108,40 @@ netsh interface ip add dnsserver $WININT 10.16.140.128
 $DepEnv = $env:CliqrDepEnvName.split('-')
 
 
-if (($DepEnv[0] -Match "SAP") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS-IRVINE")) {
+if (($DepEnv[0] -Match "SAP") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS")) {
 add-windowsfeature AD-Domain-Services
-Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com'
+Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com'
 }
-elseif (($DepEnv[1] -Match "Prod") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS-IRVINE")) {
+elseif (($DepEnv[1] -Match "Prod") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS")) {
 add-windowsfeature AD-Domain-Services
-Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com'
+Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com'
 }
-elseif (($DepEnv[1] -Match "Dev" -Or "Test") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS-IRVINE")) {
+elseif (($DepEnv[1] -Match "Dev" -Or "Test") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS")) {
 add-windowsfeature AD-Domain-Services
-Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com'
+Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com'
 }
 elseif (($DepEnv[0] -Match "SAP") -and ($env:Cloud_Setting_cloud -eq "GCP-us-central1")){
-Add-Computer -DomainName $domain -Credential $credential -newname $env:cliqrNodeHostname -OUpath "OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com" -restart
+Add-Computer -DomainName $domain -Credential $credential -newname $env:cliqrNodeHostname -OUpath "OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com" -restart
 echo "SAP"
 }
 elseif (($DepEnv[1] -Match "Prod") -and ($env:Cloud_Setting_cloud -eq "GCP-us-central1")){
-Add-Computer -DomainName $domain -Credential $credential -newname $env:cliqrNodeHostname -OUpath "OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com" -restart
+Add-Computer -DomainName $domain -Credential $credential -newname $env:cliqrNodeHostname -OUpath "OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com" -restart
 echo "prod"
 }
 elseif (($DepEnv[1] -Match "Dev" -Or "Test") -and ($env:Cloud_Setting_cloud -eq "GCP-us-central1")){
-Add-Computer -DomainName $domain -Credential $credential -newname $env:cliqrNodeHostname -OUpath "OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com" -restart
+Add-Computer -DomainName $domain -Credential $credential -newname $env:cliqrNodeHostname -OUpath "OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com" -restart
 echo "Test or Dev"
 }
 elseif (($DepEnv[0] -Match "SAP") -and ($env:Cloud_Setting_cloud -eq "AWS-us-west-2")){
-Add-Computer -DomainName $domain -Credential $credential -OUpath "OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com" -restart
+Add-Computer -DomainName $domain -Credential $credential -OUpath "OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com" -restart
 echo "SAP"
 }
 elseif (($DepEnv[1] -Match "Prod") -and ($env:Cloud_Setting_cloud -eq "AWS-us-west-2")){
-Add-Computer -DomainName $domain -Credential $credential -OUpath "OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com" -restart
+Add-Computer -DomainName $domain -Credential $credential -OUpath "OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com" -restart
 echo "prod"
 }
 elseif (($DepEnv[1] -Match "Dev" -Or "Test") -and ($env:Cloud_Setting_cloud -eq "AWS-us-west-2")){
-Add-Computer -DomainName $domain -Credential $credential -OUpath "OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=irvineco,DC=com" -restart
+Add-Computer -DomainName $domain -Credential $credential -OUpath "OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com" -restart
 echo "Test or Dev"
 }
 
