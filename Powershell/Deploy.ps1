@@ -73,26 +73,26 @@ Echo "Not a 2012 System"
 }
 
 #add DNS Server
-netsh interface ip add dnsserver $WININT 10.16.128.128
-netsh interface ip add dnsserver $WININT 10.16.128.130
-netsh interface ip add dnsserver $WININT 10.16.140.128
+netsh interface ip add dnsserver $WININT <DNS IP>
+netsh interface ip add dnsserver $WININT <DNS IP>
+netsh interface ip add dnsserver $WININT <DNS IP>
 
 #Add host into the AD Domain. Please note there are differences in each cloud. GCP for example does not change the hostname in the VM. AWS does this however. 
 
 $DepEnv = $env:CliqrDepEnvName.split('-')
 
 
-if (($DepEnv[0] -Match "SAP") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS-IRVINE")) {
+if (($DepEnv[0] -Match "SAP") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS")) {
 add-windowsfeature AD-Domain-Services
 Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=SAP,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com'
 Restart-Computer
 }
-elseif (($DepEnv[1] -Match "Prod") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS-IRVINE")) {
+elseif (($DepEnv[1] -Match "Prod") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS")) {
 add-windowsfeature AD-Domain-Services
 Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=Production,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com'
 Restart-Computer
 }
-elseif (($DepEnv[1] -Match "Dev" -Or "Test") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS-IRVINE")) {
+elseif (($DepEnv[1] -Match "Dev" -Or "Test") -and ($env:Cloud_Setting_cloud -eq "CLOUD_CLUS")) {
 add-windowsfeature AD-Domain-Services
 Get-AdComputer $env:cliqrNodeHostname -Credential $credential | Move-ADObject -TargetPath 'OU=Dev-Test,OU=Servers,OU=Information Technology,DC=corp,DC=localdomain,DC=com'
 Restart-Computer
